@@ -30,41 +30,41 @@ class Spot:
 		self.width = width
 		self.totalRows = totalRows
 
-	def getPos(self):
-		return self.row, self.col
-
-	def isClosed(self):
-		return self.color == RED
-
 	def isOpen(self):
 		return self.color == GREEN
 
-	def isBarrier(self):
-		return self.color == BLACK
+	def isClosed(self):
+		return self.color == GREY
+
+	def getPos(self):
+		return self.row, self.col
 
 	def isStart(self):
-		return self.color == ORANGE
-
-	def isEnd(self):
 		return self.color == TURQUOISE
 
+	def isEnd(self):
+		return self.color == BLACK
+
+	def isBarrier(self):
+		return self.color == ORANGE
+
 	def reset(self):
-		self.color = WHITE
+		self.color = RED
 
 	def makeStart(self):
-		self.color = ORANGE
+		self.color = TURQUOISE
 
 	def makeClosed(self):
-		self.color = RED
+		self.color = GREY
 
 	def makeOpen(self):
 		self.color = GREEN
 
 	def makeBarrier(self):
-		self.color = BLACK
+		self.color = ORANGE
 
 	def makeEnd(self):
-		self.color = TURQUOISE
+		self.color = BLACK
 
 	def makePath(self):
 		self.color = PURPLE
@@ -90,7 +90,7 @@ class Spot:
 		return False
 
 
-def K(p1, p2):
+def Jj(p1, p2):
 	x1, y1 = p1
 	x2, y2 = p2
 	return abs(x1 - x2) + abs(y1 - y2)
@@ -111,7 +111,7 @@ def algorithm(draw, grid, start, end):
 	gScore = {spot: float("inf") for row in grid for spot in row}
 	gScore[start] = 0
 	fScore = {spot: float("inf") for row in grid for spot in row}
-	fScore[start] = K(start.getPos(), end.getPos())
+	fScore[start] = Jj(start.getPos(), end.getPos())
 
 	openSetHash = {start}
 
@@ -134,7 +134,7 @@ def algorithm(draw, grid, start, end):
 			if tempGScore<gScore[neighbor]:
 				origin[neighbor] = current
 				gScore[neighbor] = tempGScore
-				fScore[neighbor] = tempGScore + K(neighbor.getPos(), end.getPos())
+				fScore[neighbor] = tempGScore + Jj(neighbor.getPos(), end.getPos())
 				if neighbor not in openSetHash:
 					count += 1
 					openSet.put((fScore[neighbor], count, neighbor))
@@ -191,7 +191,7 @@ def getClickedPos(pos, rows, width):
 
 
 def main(win, width):
-	ROWS = 50
+	ROWS = 38
 	grid = makeGrid(ROWS, width)
 
 	start = None
